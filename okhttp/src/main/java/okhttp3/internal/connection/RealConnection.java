@@ -422,10 +422,15 @@ public final class RealConnection extends Http2Connection.Listener implements Co
         .url(route.address().url())
         .header("Host", Util.hostHeader(route.address().url(), true))
         .header("Proxy-Connection", "Keep-Alive") // For HTTP/1.0 proxies like Squid.
-        .header("User-Agent", Version.userAgent())
-        .build();
-  }
-
+        .header("User-Agent", Version.userAgent());
+        
+    String value = call.request().header("Proxy-Authorization");
+    if (value != null) {
+       builder.header("Proxy-Authorization", value);
+    }
+    
+  return builder.build();
+}
   /**
    * Returns true if this connection can carry a stream allocation to {@code address}. If non-null
    * {@code route} is the resolved route for a connection.

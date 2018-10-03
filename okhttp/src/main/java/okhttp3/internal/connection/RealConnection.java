@@ -418,18 +418,23 @@ public final class RealConnection extends Http2Connection.Listener implements Co
    * This avoids sending potentially sensitive data like HTTP cookies to the proxy unencrypted.
    */
   private Request createTunnelRequest() {
-    return new Request.Builder()
+    
+    String value = call.request().header("Proxy-Authorization");
+    
+    if (value != null) {
+       return new Request.Builder()
         .url(route.address().url())
         .header("Host", Util.hostHeader(route.address().url(), true))
+        .header("Proxy-Authorization", value)
         .header("Proxy-Connection", "Keep-Alive") // For HTTP/1.0 proxies like Squid.
         .header("User-Agent", Version.userAgent());
-        
-    String value = call.request().header("Proxy-Authorization");
-    if (value != null) {
-       builder.header("Proxy-Authorization", value);
+    }else{
+          return new Request.Builder()
+            .url(route.address().url())
+            .header("Host", Util.hostHeader(route.address().url(), true))
+            .header("Proxy-Connection", "Keep-Alive") // For HTTP/1.0 proxies like Squid.
+            .header("User-Agent", Version.userAgent());
     }
-    
-  return builder.build();
 }
   /**
    * Returns true if this connection can carry a stream allocation to {@code address}. If non-null

@@ -427,13 +427,13 @@ public final class RealConnection extends Http2Connection.Listener implements Co
         .header("Host", Util.hostHeader(route.address().url(), true))
         .header("Proxy-Authorization", value)
         .header("Proxy-Connection", "Keep-Alive") // For HTTP/1.0 proxies like Squid.
-        .header("User-Agent", Version.userAgent());
+        .header("User-Agent", Version.userAgent()).build();
     }else{
           return new Request.Builder()
             .url(route.address().url())
             .header("Host", Util.hostHeader(route.address().url(), true))
             .header("Proxy-Connection", "Keep-Alive") // For HTTP/1.0 proxies like Squid.
-            .header("User-Agent", Version.userAgent());
+            .header("User-Agent", Version.userAgent()).build();
     }
 }
   /**
